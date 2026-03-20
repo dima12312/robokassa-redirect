@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Возврат в приложение</title>
+</head>
+<body>
     <script>
         const params = new URLSearchParams(window.location.search);
         const orderId = params.get('orderId') || params.get('InvoiceID');
         const outSum = params.get('OutSum');
         const signatureValue = params.get('SignatureValue');
         if (orderId && outSum && signatureValue) {
-            location.href = `robokassa://open?orderId=${orderId}&OutSum=${outSum}&SignatureValue=${signatureValue}`;
+            window.location.href = `robokassa://open?orderId=${orderId}&OutSum=${outSum}&SignatureValue=${signatureValue}`;
         } else {
             document.write('Недостаточно параметров для возврата');
         }
     </script>
-</head>
-<body></body>
+</body>
 </html>
