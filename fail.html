@@ -3,26 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Возврат в приложение</title>
-    <script>
-        // Получаем параметры из URL (orderId и OutSum)
-        const urlParams = new URLSearchParams(window.location.search);
-        const orderId = urlParams.get('orderId');
-        const outSum = urlParams.get('OutSum');
-        const signatureValue = urlParams.get('SignatureValue');
-
-        // Формируем deep link с параметрами
-        const deepLink = `robokassa://open?orderId=${orderId}&OutSum=${outSum}&SignatureValue=${signatureValue}`;
-        
-        // Перенаправляем
-        window.location.href = deepLink;
-    </script>
 </head>
 <body>
-    <p>Перенаправление обратно в приложение...</p>
-    <p>Если ничего не происходит, <a href="#" id="manualLink">нажмите здесь</a>.</p>
     <script>
-        // Запасной вариант: показать ссылку, если редирект не сработал
-        document.getElementById('manualLink').href = deepLink;
+        const params = new URLSearchParams(window.location.search);
+        const invId = params.get('inv_id') || params.get('InvId');
+        const outSum = params.get('OutSum');
+        const signatureValue = params.get('SignatureValue');
+        if (invId && outSum && signatureValue) {
+            window.location.href = `robokassa://open?orderId=${invId}&OutSum=${outSum}&SignatureValue=${signatureValue}`;
+        } else {
+            document.write('Недостаточно параметров для возврата');
+        }
     </script>
 </body>
 </html>
