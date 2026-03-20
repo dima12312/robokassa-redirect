@@ -7,7 +7,7 @@
 <body>
     <script>
         const params = new URLSearchParams(window.location.search);
-        const invId = params.get('InvId');
+        const invId = params.get('inv_id') || params.get('InvId');
         const outSum = params.get('OutSum');
         const signatureValue = params.get('SignatureValue');
         if (invId && outSum && signatureValue) {
