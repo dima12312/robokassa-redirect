@@ -3,33 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Возврат в приложение</title>
-    <script>
-        // Функция для получения параметров из URL
-        function getParameterByName(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
-
-        // Получаем параметры (пробуем разные варианты написания)
-        var invId = getParameterByName('inv_id') || getParameterByName('InvId');
-        var outSum = getParameterByName('OutSum');
-        var signatureValue = getParameterByName('SignatureValue');
-
-        // Если параметры найдены – делаем редирект
-        if (invId && outSum && signatureValue) {
-            var deepLink = 'robokassa://open?orderId=' + invId + '&OutSum=' + outSum + '&SignatureValue=' + signatureValue;
-            window.location.href = deepLink;
-        } else {
-            // Если не найдены – показываем все параметры для отладки
-            var allParams = [];
-            for (var pair of new URLSearchParams(window.location.search).entries()) {
-                allParams.push(pair[0] + '=' + pair[1]);
-            }
-            document.write('Недостаточно параметров для возврата.<br>');
-            document.write('Найдены параметры: ' + allParams.join(', '));
-        }
-    </script>
 </head>
 <body>
+    <h3>Получены параметры:</h3>
+    <pre id="params"></pre>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const invId = params.get('inv_id') || params.get('InvId');
+        const outSum = params.get('OutSum');
+        const signatureValue = params.get('SignatureValue');
+        
+        let output = '';
+        for (let [key, value] of params.entries()) {
+            output += `${key} = ${value}\n`;
+        }
+        document.getElementById('params').innerText = output || 'Параметры не найдены';
+        
+        if (invId && outSum && signatureValue) {
+            document.body.innerHTML += '<p>✅ Параметры найдены. Перенаправление...</p>';
+            setTimeout(() => {
+                window.location.href = `robokassa://open?orderId=${invId}&OutSum=${outSum}&SignatureValue=${signatureValue}`;
+            }, 1000);
+        } else {
+            document.body.innerHTML += '<p>❌ Недостаточно параметров для возврата</p>';
+        }
+    </script>
 </body>
 </html>
