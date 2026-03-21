@@ -3,18 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Возврат в приложение</title>
-</head>
-<body>
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const invId = params.get('inv_id') || params.get('InvId');
-        const outSum = params.get('OutSum');
-        const signatureValue = params.get('SignatureValue');
+        // Функция для получения параметров из URL
+        function getParameterByName(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Получаем параметры (пробуем разные варианты написания)
+        var invId = getParameterByName('inv_id') || getParameterByName('InvId');
+        var outSum = getParameterByName('OutSum');
+        var signatureValue = getParameterByName('SignatureValue');
+
+        // Если параметры найдены – делаем редирект
         if (invId && outSum && signatureValue) {
-            window.location.href = `robokassa://open?orderId=${invId}&OutSum=${outSum}&SignatureValue=${signatureValue}`;
+            var deepLink = 'robokassa://open?orderId=' + invId + '&OutSum=' + outSum + '&SignatureValue=' + signatureValue;
+            window.location.href = deepLink;
         } else {
-            document.write('Недостаточно параметров для возврата');
+            // Если не найдены – показываем все параметры для отладки
+            var allParams = [];
+            for (var pair of new URLSearchParams(window.location.search).entries()) {
+                allParams.push(pair[0] + '=' + pair[1]);
+            }
+            document.write('Недостаточно параметров для возврата.<br>');
+            document.write('Найдены параметры: ' + allParams.join(', '));
         }
     </script>
+</head>
+<body>
 </body>
 </html>
